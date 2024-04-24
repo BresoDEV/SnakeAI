@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    button {
+        border: 1px solid black;
+    }
+</style>
+
+<body>
+    <p id="cb"></p>
+    <p id="c"></p>
+    <p id="m"></p>
+    <p id="pa"></p>
+    <p id="pav"></p>
+    <p></p>
+    <p></p>
+    <center>
+        <div id="div"></div>
+    </center>
+
+</body>
+<script>
+    const div = document.getElementById('div');
+    const cb = document.getElementById('cb');
+    const c = document.getElementById('c');
+    const m = document.getElementById('m');
+    const pa = document.getElementById('pa');
+    const pav = document.getElementById('pav');
+
+    var contadorBlocos = 0;
+    var blocosComidos = 0;
+    var posAtual = 0;
+    var posAtualVermelho = 0;
+    var movimentos = 0;
+    var capturados = 0;
+    var numeroSpawnsPorCaptura = 1;
+
+
+    for (let index = 0; index < 15; index++) {
+        for (let index2 = 0; index2 < 15; index2++) {
+            div.innerHTML += '<button id="_' + contadorBlocos + '">&nbsp;</button>'
+            contadorBlocos++;
+        }
+        div.innerHTML += '<br>'
+    }
+
+
+
+    //inicioAleatorio
+    var inicioAleatorio = Math.floor(Math.random() * contadorBlocos);
+    document.getElementById('_' + inicioAleatorio).style.backgroundColor = 'green';
+    posAtual = inicioAleatorio;
+
+    setRed()
+
+    setInterval(() => {
+        moviment()
+
+
+        cb.innerHTML = 'Blocos: ' + contadorBlocos;
+        c.innerHTML = 'Capturados: ' + capturados;
+        m.innerHTML = 'Movimentos: ' + movimentos;
+        pa.innerHTML = 'Posicao atual: ' + posAtual;
+        pav.innerHTML = 'Posicao Vermelho: ' + posAtualVermelho;
+
+    }, 100);
+
+
+    function moviment() {
+
+
+        let cima = posAtual - 15;
+        let baixo = posAtual + 15;
+        let direita = posAtual + 1;
+        let esquerda = posAtual - 1;
+
+        let aleatorio = Math.floor(Math.random() * 4);
+
+        if (isRed(cima)) {
+            setGreen(cima)
+        }
+        else if (isRed(baixo)) {
+            setGreen(baixo)
+        }
+        else if (isRed(esquerda)) {
+            setGreen(esquerda)
+        }
+        else if (isRed(direita)) {
+            setGreen(direita)
+        }
+        else {
+            switch (aleatorio) {
+                case 1:
+                    if (exist(cima)) { setGreen(cima) }
+                    break;
+                case 2:
+                    if (exist(baixo)) { setGreen(baixo) }
+                    break;
+                case 3:
+                    if (exist(esquerda)) { setGreen(esquerda) }
+                    break;
+                case 4:
+                    if (exist(direita)) { setGreen(direita) }
+                    break;
+                default:
+
+                    break;
+
+            }
+        }
+
+        movimentos++;
+
+
+    }
+
+    function setRed() {
+        var inicioAleatorio = Math.floor(Math.random() * contadorBlocos);
+        document.getElementById('_' + inicioAleatorio).style.backgroundColor = 'red';
+        posAtualVermelho = inicioAleatorio;
+    }
+
+    function setGreen(id) {
+        allWhite()
+        if (document.getElementById('_' + id).style.backgroundColor == 'red') {
+            capturados++;
+
+            for (let index = 0; index < numeroSpawnsPorCaptura; index++) {
+                setRed();
+
+            }
+
+        }
+        document.getElementById('_' + id).style.backgroundColor = 'green';
+        posAtual = id;
+    }
+
+    function allWhite() {
+        for (let index = 0; index < contadorBlocos; index++) {
+            if (document.getElementById('_' + index).style.backgroundColor !== 'red') {
+                document.getElementById('_' + index).style.backgroundColor = 'white';
+            }
+        }
+    }
+    function isRed(index) {
+        if (document.getElementById('_' + index)) {
+            if (document.getElementById('_' + index).style.backgroundColor !== 'red') {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    function exist(index) {
+        if (document.getElementById('_' + index)) {
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
+
+</script>
+
+
+</html>
